@@ -26,7 +26,7 @@ let app = {
             res.end()
             // 1.3 如果获取文件失败，则返回404静态页面
         } catch (error) {
-            let fileHandle = await open(`./${filepath}/404.html`, 'r')
+            let fileHandle = await open(`${process.cwd()}/${filepath}/404.html`, 'r')
             let file = await fileHandle.readFile()
             fileHandle.close()
             res.writeHead(404, { "Content-Type": "text/html;charset='utf-8'" })
@@ -53,7 +53,7 @@ let app = {
                 title: '新闻5555'
             }
         ]
-        ejs.renderFile('./views/login.ejs', { msg: msg, item: item }, (err, str) => {
+        ejs.renderFile(`${process.cwd()}/views/login.ejs`, { msg: msg, item: item }, (err, str) => {
             res.writeHead(200, { 'Content-Type': 'text/html;charset="utf-8"' });
             res.write(str)
             res.end()
@@ -75,7 +75,10 @@ let app = {
         // /news?page=1&name=5
         let urlObj = new URL(req.url, `http://${req.headers.host}`);
         let querySearch = urlObj
-        ejs.renderFile('./views/form.ejs', {}, (err, str) => {
+        ejs.renderFile(`${process.cwd()}/views/form.ejs`, {}, (err, str) => {
+            console.log(__dirname)
+            console.log(__filename)
+            console.log(process.cwd())
             res.writeHead(200, { 'Content-Type': 'text/html;charset="utf-8"' });
             res.write(str)
             // 获取/news?page=1&name=5 的get传值
@@ -85,7 +88,7 @@ let app = {
         })
     },
     error: async (req, res) => {
-        let fileHandle = await open(`./static/404.html`, 'r')
+        let fileHandle = await open(`${process.cwd()}/static/404.html`, 'r')
         let file = await fileHandle.readFile()
         fileHandle.close()
         res.writeHead(404, { "Content-Type": "text/html;charset='utf-8'" })
