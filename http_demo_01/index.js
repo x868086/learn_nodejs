@@ -40,14 +40,29 @@ httpServer.on('request', async (req, res) => {
                 res.write(str)
                 res.end()
             })
-        }else if (pathName == '/register') {
-            res.writeHead(200, { 'Content-Type': 'text/html;charset="utf-8"' });
-            res.write("执行注册")
-            res.end();
-        } else if (pathName == '/admin') {
-            res.writeHead(200, { 'Content-Type': 'text/html;charset="utf-8"' });
-            res.write("处理后的业务逻辑")
-            res.end();
+        }else if (pathName == '/news') {
+                // /news?page=1&name=5
+                let querySearch = urlObj
+            ejs.renderFile('./views/form.ejs',{},(err, str)=>{
+                res.writeHead(200,{'Content-Type':'text/html;charset="utf-8"'});
+                res.write(str)
+                // 获取/news?page=1&name=5 的get传值
+                res.write(`Param1:  ${querySearch.searchParams.get('page')} `)
+                res.write(`Param2:  ${querySearch.searchParams.get('name')} `)
+                res.end()
+            })
+        } else if (pathName == '/doLogin') {
+            let postData =''
+            req.on('data',(chunk)=>{
+                postData += chunk
+            });
+            req.on('end',()=>{
+                res.writeHead(200,{'Content-Type':'text/html;charset="utf-8"'});
+                res.write(postData)
+                res.write(`请求方法是：${req.method}`)
+                res.end()
+            })
+
         } else {
             let fileHandle = await open(`./static/404.html`, 'r')
             let file = await fileHandle.readFile()
